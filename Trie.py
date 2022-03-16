@@ -8,6 +8,7 @@ class Trie:
             return
 
         current = self.root
+        index = ord(key) - ord('a')
         for letter in key:
             if current.children:
                 for child in current.children:
@@ -37,6 +38,29 @@ class Trie:
         if not current.isEndNode:
             return False
         return True
+
+    def delete_helper(self, key, limit, index, current_node):
+        if index == limit - 1:
+            if not current_node.children:
+                current_node = None
+                return True
+            else:
+                if current_node.isEndNode:
+                    current_node.isEndNode = False
+                    return True
+        else:
+            if key[index] == current_node.value:
+                found = False
+                for child in current_node.children:
+                    if child == key[index+1]:
+                        found = self.delete_helper(key, limit, index+1, current_node)
+            self.delete_helper(key, limit, index+1, current_node)
+
+    def delete(self, key):
+        if not key:
+            return False
+        else:
+            self.delete_helper(key, len(key), 0, self.root)
 
 '''
     Sample Test cases to test against.
